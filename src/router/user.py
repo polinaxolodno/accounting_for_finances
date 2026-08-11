@@ -36,6 +36,14 @@ async def get_user_list(filters: Filters, session: AsyncSession = Depends(get_se
                  User.email.ilike(f'%{filters.search_str}%'),
              )
          )
+     if filters.date_create_gte is not None:
+         query = query.filter(
+             User.date_joined >= filters.date_create_gte
+         )
+     if filters.date_create_lte is not None:
+         query = query.filter(
+             User.date_joined <= filters.date_create_lte
+         )
      query_result = await session.execute(query)
      return [user.serialize() for user in query_result.scalars().all()]
 
