@@ -23,3 +23,30 @@ packages = [{include = "accounting_for_finances", from = "src"}]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+test = [
+    "flake8 (>=7.3.0,<8.0.0)",
+    "flake8-pyproject (>=1.2.4,<2.0.0)",
+    "pep8-naming (>=0.15.1,<0.16.0)"
+]
+
+[tool.flake8]
+max-line-length = 120
+ignore = [
+    # W503: line break before binary operator
+    "W503"
+]
+exclude = [
+    ".git",
+    "__pycache__",
+    "conf",
+    "venv",
+    ".venv",
+    ".vscode",
+    ".idea",
+]
+per-file-ignores = [
+#    "migrations/env.py:F401",
+#    "migrations/versions/*:W291",
+]

@@ -12,7 +12,7 @@ class MoneyBox(Base):
     )
     id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
     moneyboxname: Mapped[String] = mapped_column(String, nullable=False)
-    userid: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('user.id') ,nullable=False)
+    userid: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('user.id'), nullable=False)
     moneygoal: Mapped[Float] = mapped_column(Float, default=0, nullable=False)
     moneybudget: Mapped[Float] = mapped_column(Float, default=0, nullable=False)
 
@@ -24,5 +24,6 @@ class MoneyBox(Base):
             "moneygoal": self.moneygoal,
             "moneybudget": self.moneybudget
         }
-
-    user = relationship("User", back_populates="money_boxes") #связь между таблиц. (название таблицы, куда соединяется не совпадает с названием класса)
+    
+    # связь между таблиц. (название таблицы, куда соединяется не совпадает с названием класса)
+    user = relationship("User", back_populates="money_boxes")
