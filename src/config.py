@@ -54,4 +54,6 @@ class Settings(BaseSettings):
     BASE_ROUTE_PATH: str = "/api/v1"
     DB: DBSettings = DBSettings()
 
+    SECRET_KEY: str = 'iseuybcdfgvloiszdflujabw'
+
 settings = Settings()
