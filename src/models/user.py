@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, UUID, Boolean, Index, TIMESTAMP, func
+from sqlalchemy import String, UUID, Index, TIMESTAMP, func
 from src.db.session import Base
 import uuid
-from  src.schema.user import UserOutPutModel
+from src.schema.user import UserOutPutModel
 from datetime import datetime
 
 
@@ -15,7 +15,7 @@ class User(Base):
     username: Mapped[String] = mapped_column(String, nullable=False)
     email: Mapped[String] = mapped_column(String, nullable=False, unique=True)
     password: Mapped[String] = mapped_column(String, nullable=False)
-    date_joined: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), server_default = func.now(), nullable=False)
+    date_joined: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
 
     def serialize(self) -> UserOutPutModel:
         return {

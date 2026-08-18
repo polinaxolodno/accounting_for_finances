@@ -32,7 +32,7 @@ test = [
 ]
 
 [tool.flake8]
-max-line-length = 120
+max-line-length = 130
 ignore = [
     # W503: line break before binary operator
     "W503"

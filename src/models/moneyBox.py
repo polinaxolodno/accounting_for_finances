@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, UUID, Boolean, Float, ForeignKey, Index, CheckConstraint
+from sqlalchemy import String, UUID, Float, ForeignKey, Index, CheckConstraint
 from src.db.session import Base
 import uuid
 from src.schema.moneyBox import MoneyBoxOutPutModel
+
 
 class MoneyBox(Base):
     __tablename__ = 'money_box'
@@ -24,6 +25,6 @@ class MoneyBox(Base):
             "moneygoal": self.moneygoal,
             "moneybudget": self.moneybudget
         }
-    
+
     # связь между таблиц. (название таблицы, куда соединяется не совпадает с названием класса)
     user = relationship("User", back_populates="money_boxes")
