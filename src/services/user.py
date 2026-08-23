@@ -1,8 +1,9 @@
-from src.schemas.user import UserCreate, UserOutPutModel
+from src.schema.user import UserCreate, UserOutPutModel
 from src.db.session import AsyncSession
 from src.models.user import User
-from src.schemas.filters import Filters
-from sqlalchemy import or_, desc, Any, UUID4
+from src.schema.filter import Filters
+from sqlalchemy import or_, desc, Any, UUID, select
+from pydantic import UUID4
 from fastapi import HTTPException
 
 
@@ -10,8 +11,8 @@ class UserService:
 
 
     @staticmethod
-    async def create_user(data: UserCreate, session: AsyncSession) -> UserOutPutModel:
-        new_user = User(**user.model_dump())
+    async def create_user(data: UserCreate, session: AsyncSession) -> User:
+        new_user = User(**data.model_dump())
         session.add(new_user)
         await session.commit()
         return new_user
@@ -47,9 +48,9 @@ class UserService:
         return query_result.scalars().all()
 
     @staticmethod
-    async def get_user_by_id(id: UUID4, session: AsyncSession) -> UserOutPutModel:
-        query = select(User).filter(User.id == id).one_or_none()
-        if query is None:
+    async def get_user_by_id(id: UUID4, session: AsyncSession) -> User:
+        query = await session.execute(select(User).where(User.id == id))
+        user = query.scalar_one_or_none()
+        if not user:
             raise HTTPException(status_code=404, detail="User not found")  # выкакать исключение, raise - исключение
-        query_result = await session.execute(query)
-        return query_result.scalars().one_or_none()
+        return user
