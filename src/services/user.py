@@ -1,10 +1,11 @@
-from src.schema.user import UserCreate, UserOutPutModel
+from src.schema.user import UserCreate, UserOutPutModel, UserLogin
 from src.db.session import AsyncSession
 from src.models.user import User
 from src.schema.filter import Filters
 from sqlalchemy import or_, desc, Any, UUID, select
-from pydantic import UUID4
-from fastapi import HTTPException
+from pydantic import UUID4, EmailStr
+from fastapi import HTTPException, Response
+from src.utils.auth import get_password_hash, authenticate_user, create_access_token
 
 
 class UserService:
@@ -12,7 +13,10 @@ class UserService:
 
     @staticmethod
     async def create_user(data: UserCreate, session: AsyncSession) -> User:
-        new_user = User(**data.model_dump())
+        if await UserService.is_user_already_exist(data.email, session):
+            raise HTTPException(status_code=400, detail="User already exists")
+        new_user = User(**data.model_dump(exclude_unset=True))  # model_dump - превращает схему в модель
+        new_user.password = get_password_hash(new_user.password)
         session.add(new_user)
         await session.commit()
         return new_user
@@ -54,3 +58,19 @@ class UserService:
         if not user:
             raise HTTPException(status_code=404, detail="User not found")  # выкакать исключение, raise - исключение
         return user
+
+    @staticmethod
+    async def is_user_already_exist(email: EmailStr, session: AsyncSession) -> bool:
+        query = await session.execute(select(User).where(User.email == email))
+        user = query.scalar_one_or_none()
+        if not user:
+            return False
+        return True
+
+    @staticmethod
+    async def login(user: UserLogin, response: Response, session: AsyncSession) -> str:
+        await authenticate_user(user.email, user.password, session)
+        jwt_token_data: dict = {"email": user.email}
+        jwt_token = create_access_token(jwt_token_data)
+        response.setcookie("access_token", jwt_token)
+        return "успешный вход"
