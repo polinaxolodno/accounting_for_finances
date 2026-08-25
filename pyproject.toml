@@ -13,7 +13,10 @@ dependencies = [
     "pydantic (>=2.13.4,<3.0.0)",
     "pydantic-settings (>=2.14.2,<3.0.0)",
     "alembic (>=1.18.5,<2.0.0)",
-    "psycopg[binary] (>=3.3.4,<4.0.0)"
+    "psycopg[binary] (>=3.3.4,<4.0.0)",
+    "pyjwt (>=2.13.0,<3.0.0)",
+    "argon2-cffi (>=25.1.0,<26.0.0)",
+
 
 ]
 

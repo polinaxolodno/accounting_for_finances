@@ -10,7 +10,7 @@ from src.schema.filter import Filters
 router = APIRouter()
 
 
-@router.post("/moneybox", tags=["moneybox"])
+@router.post("/moneybox")
 async def create_moneybox(money_box: MoneyBoxCreate, session: AsyncSession = Depends(get_session)) -> MoneyBoxOutPutModel:
     new_moneybox = await MoneyBoxService.create_moneybox(money_box, session)
     return new_moneybox.serialize()

@@ -5,6 +5,7 @@ import uvicorn
 from src.config import settings
 from src.router.user import router as user_router
 from src.router.moneyBox import router as moneybox_router
+from src.router.auth import router as auth_router
 
 app = FastAPI(openapi_url=f"{settings.BASE_ROUTE_PATH}/openapi.json", docs_url=f"{settings.BASE_ROUTE_PATH}/docs")
 
@@ -12,8 +13,9 @@ router = APIRouter(prefix=settings.BASE_ROUTE_PATH)
 
 # router.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 # router.include_router(users.router, prefix="/users", tags=["Tasks"])
-router.include_router(user_router, prefix="/user", tags=["users"])
-router.include_router(moneybox_router, prefix="/moneybox", tags=["moneybox"])
+router.include_router(user_router, prefix="/user", tags=["UsErs"])
+router.include_router(moneybox_router, prefix="/moneybox", tags=["mOnEYbOx"])
+router.include_router(auth_router, prefix="/auth", tags=["AUth"])
 
 app.include_router(router)
 

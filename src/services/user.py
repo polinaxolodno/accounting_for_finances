@@ -6,6 +6,7 @@ from sqlalchemy import or_, desc, Any, UUID, select
 from pydantic import UUID4, EmailStr
 from fastapi import HTTPException, Response
 from src.utils.auth import get_password_hash, authenticate_user, create_access_token
+from typing import List
 
 
 class UserService:
@@ -52,8 +53,8 @@ class UserService:
         return query_result.scalars().all()
 
     @staticmethod
-    async def get_user_by_id(id: UUID4, session: AsyncSession) -> User:
-        query = await session.execute(select(User).where(User.id == id))
+    async def get_user_by_email(email: EmailStr, session: AsyncSession) -> User:
+        query = await session.execute(select(User).where(User.email == email))
         user = query.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")  # выкакать исключение, raise - исключение
@@ -72,5 +73,10 @@ class UserService:
         await authenticate_user(user.email, user.password, session)
         jwt_token_data: dict = {"email": user.email}
         jwt_token = create_access_token(jwt_token_data)
-        response.setcookie("access_token", jwt_token)
+        response.set_cookie("access_token", jwt_token)
         return "успешный вход"
+
+    @staticmethod
+    async def logout(response: Response) -> str:
+        response.delete_cookie("access_token")
+        return "вы вышли из системы"
