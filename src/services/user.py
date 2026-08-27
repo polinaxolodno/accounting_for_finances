@@ -7,6 +7,7 @@ from pydantic import UUID4, EmailStr
 from fastapi import HTTPException, Response
 from src.utils.auth import get_password_hash, authenticate_user, create_access_token
 from typing import List
+from src.container.repository import repository_container
 
 
 class UserService:
@@ -53,9 +54,8 @@ class UserService:
         return query_result.scalars().all()
 
     @staticmethod
-    async def get_user_by_email(email: EmailStr, session: AsyncSession) -> User:
-        query = await session.execute(select(User).where(User.email == email))
-        user = query.scalar_one_or_none()
+    async def get_user_by_email(email: EmailStr) -> User:
+        user = repository_container.user_repository().get_one(email=email)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")  # выкакать исключение, raise - исключение
         return user
