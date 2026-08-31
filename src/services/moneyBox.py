@@ -4,6 +4,7 @@ from src.models.moneyBox import MoneyBox
 from src.schema.filter import Filters
 from sqlalchemy import or_, desc, Any, UUID, select
 from fastapi import HTTPException
+from src.container.repository import repository_container
 
 
 class MoneyBoxService:

@@ -14,56 +14,27 @@ class UserService:
 
 
     @staticmethod
-    async def create_user(data: UserCreate, session: AsyncSession) -> User:
-        if await UserService.is_user_already_exist(data.email, session):
+    async def create_user(data: UserCreate) -> User:
+        if await UserService.is_user_already_exist(data.email):
             raise HTTPException(status_code=400, detail="User already exists")
-        new_user = User(**data.model_dump(exclude_unset=True))  # model_dump - превращает схему в модель
-        new_user.password = get_password_hash(new_user.password)
-        session.add(new_user)
-        await session.commit()
+        data.password = get_password_hash(data.password)
+        new_user = repository_container.user_repository().add_one(data)
         return new_user
 
     @staticmethod
-    async def get_users_list(filters: Filters, session: AsyncSession) -> List[UserOutPutModel]:
-        query = select(User)
-        if filters.limit is not None and filters.limit >= 0:
-            query = query.limit(filters.limit)
-        if filters.offset is not None and filters.offset >= 0:
-            query = query.offset(filters.offset)
-        if filters.order_by is not None:
-            if filters.order_desc:
-                query = query.order_by(desc(filters.order_by))
-            else:
-                query = query.order_by(filters.order_by)
-        if filters.search_str is not None:
-            query = query.filter(
-                or_(
-                    User.username.ilike(f'%{filters.search_str}%'),
-                    User.email.ilike(f'%{filters.search_str}%'),
-                )
-            )
-        if filters.date_create_gte is not None:
-            query = query.filter(
-                User.date_joined >= filters.date_create_gte
-            )
-        if filters.date_create_lte is not None:
-            query = query.filter(
-                User.date_joined <= filters.date_create_lte
-            )
-        query_result = await session.execute(query)
-        return query_result.scalars().all()
+    async def get_users_list(filters: Filters) -> List[User]:
+        return repository_container.user_repository().get_list(filters=filters)
 
     @staticmethod
-    async def get_user_by_email(email: EmailStr) -> User:
-        user = repository_container.user_repository().get_one(email=email)
+    async def get_user_by_id(id: UUID) -> User:
+        user = repository_container.user_repository().get_one(id=id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")  # выкакать исключение, raise - исключение
         return user
 
     @staticmethod
-    async def is_user_already_exist(email: EmailStr, session: AsyncSession) -> bool:
-        query = await session.execute(select(User).where(User.email == email))
-        user = query.scalar_one_or_none()
+    async def is_user_already_exist(email: EmailStr) -> bool:
+        user = repository_container.user_repository().get_one(email=email)
         if not user:
             return False
         return True

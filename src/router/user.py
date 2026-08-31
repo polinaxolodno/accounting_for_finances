@@ -13,9 +13,8 @@ router = APIRouter()
 
 
 @router.get("/user-list")  # Сами создаем путя прямо тута и pycharm в него верит
-async def get_user_list(filters: Filters, session: AsyncSession = Depends(get_session), user_email: EmailStr = Depends(get_current_user_email)) -> list[UserOutPutModel]:
-    query_result = await UserService.get_users_list(filters, session)
-    return [user.serialize() for user in query_result]
+async def get_user_list(filters: Filters, user_email: EmailStr = Depends(get_current_user_email)) -> list[UserOutPutModel]:
+    return [user.serialize() for user in await UserService.get_user_list(filters=filters)]
 
 @router.get("/user-info")  # исправить путь
 async def get_user_by_email(user_email: EmailStr = Depends(get_current_user_email), session: AsyncSession = Depends(get_session)) -> UserOutPutModel:

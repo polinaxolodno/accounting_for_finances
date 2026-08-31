@@ -15,6 +15,7 @@ class UserCreate(BaseModel):
     password: str = Field(description='password')
     date_joined: datetime = Field(description='date_joined')
 
+
 class UserLogin(BaseModel):
     email:str = Field(description='email')
     password: str = Field(description='password')
