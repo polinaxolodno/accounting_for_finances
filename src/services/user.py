@@ -41,8 +41,8 @@ class UserService:
 
     @staticmethod
     async def login(user: UserLogin, response: Response, session: AsyncSession) -> str:
-        await authenticate_user(user.email, user.password, session)
-        jwt_token_data: dict = {"email": user.email}
+        new_user = await authenticate_user(user.email, user.password, session)
+        jwt_token_data: dict = {"id": new_user.id}
         jwt_token = create_access_token(jwt_token_data)
         response.set_cookie("access_token", jwt_token)
         return "успешный вход"

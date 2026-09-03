@@ -12,8 +12,8 @@ router = APIRouter()
 
 
 @router.post("/register")
-async def register(user: UserCreate, session: AsyncSession = Depends(get_session)) -> UserOutPutModel:
-    user = await UserService.create_user(user, session)
+async def register(user: UserCreate) -> UserOutPutModel:
+    user = await UserService.create_user(user)
     return user.serialize()
 
 @router.post("/login")
