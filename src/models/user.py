@@ -26,3 +26,4 @@ class User(Base):
         }
 
     money_boxes = relationship("MoneyBox", back_populates="user")
+    daily_budget = relationship("DailyBudget", back_populates="user")

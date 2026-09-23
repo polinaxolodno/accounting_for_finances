@@ -1,5 +1,6 @@
 from src.repository.moneyBox import MoneyBoxRepository
 from src.repository.user import UserRepository
+from src.repository.dailyBudget import DailyBudgetRepository
 from dataclasses import dataclass
 from src.db.session import async_session_maker
 from src.config import settings, Settings
@@ -17,5 +18,7 @@ class RepositoryContainer:
     def moneybox_repository(self) -> MoneyBoxRepository:
         return MoneyBoxRepository(async_session_maker=self.async_session_maker)
 
+    def dailyBudget_repository(self) -> DailyBudgetRepository:
+        return DailyBudgetRepository(async_session_maker=self.async_session_maker)
 
 repository_container = RepositoryContainer(async_session_maker= async_session_maker)
