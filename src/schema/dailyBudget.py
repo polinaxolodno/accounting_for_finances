@@ -4,12 +4,14 @@ from datetime import datetime
 
 class DailyBudgetOutPutModel(BaseModel):
     id: UUID4 = Field(description='id')
-    budget: float = Field(description='budget')
+    total_budget: float = Field(description='total_budget')
     date_end: datetime = Field(description='date_end')
+    daily_budget: float = Field(description='daily_budget')
     userid: UUID4 = Field(description='user_id', foreign_key='user.id')
 
 
 class DailyBudgetCreate(BaseModel):
-    budget: float = Field(description='budget')
+    total_budget: float = Field(description='total_budget')
     date_end: datetime = Field(description='date_end')
+    daily_budget: float = Field(description='daily_budget')
     userid: UUID4 = Field(description='user_id', foreign_key='user.id')

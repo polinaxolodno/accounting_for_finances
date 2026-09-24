@@ -10,14 +10,16 @@ class DailyBudget(Base):
     __tablename__ = "dailyBudget"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
-    budget: Mapped[Float] = mapped_column(Float, nullable=False)
+    total_budget: Mapped[Float] = mapped_column(Float, nullable=False)
     date_end: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
+    daily_budget: Mapped[Float] = mapped_column(Float, nullable=False)
     userid: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('user.id'), nullable=False)
     def serialize(self) -> DailyBudgetOutPutModel:
         return {
             "id": self.id,
-            "budget": self.budget,
+            "total_budget": self.total_budget,
             "date_end": self.date_end,
+            "daily_budget": self.daily_budget,
             "userid": self.userid
         }
 
