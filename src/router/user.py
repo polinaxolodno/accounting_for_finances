@@ -8,6 +8,9 @@ from src.db.session import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.schema.filter import Filters
 from src.utils.auth import get_current_user_id
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -18,5 +21,6 @@ async def get_user_list(filters: Filters, user_email: EmailStr = Depends(get_cur
 
 @router.get("/user-info")  # исправить путь
 async def get_user_by_id(user_id: UUID = Depends(get_current_user_id)) -> UserOutPutModel:
+    logger.debug(user_id)
     query_result = await UserService.get_user_by_id(user_id)
     return query_result.serialize()

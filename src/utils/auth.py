@@ -9,6 +9,10 @@ from src.models.user import User
 from pydantic import UUID4, EmailStr
 from sqlalchemy import select, desc, or_, UUID
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 password_hasher = PasswordHasher()
 
 
@@ -58,11 +62,14 @@ def get_password_hash(password: str) -> str:
     return password_hasher.hash(password)
 
 def get_user_id_from_token(token: str) -> UUID:
+    logger.info(token)
     jwt_payload: dict = get_token_if_valid(token)
     user_id = jwt_payload.get("id")
+    logger.info("Пиписька " + user_id)
     if not user_id:
         raise HTTPException(403, "Here is no email in jwt_token")
     return user_id
 
 def get_current_user_id(token: str = Depends(get_token)) -> UUID:
+    logger.debug(token)
     return get_user_id_from_token(token)

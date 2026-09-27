@@ -12,6 +12,7 @@ from os.path import dirname, abspath
 
 from src.models.user import User
 from src.models.moneyBox import MoneyBox
+from src.models.dailyBudget import DailyBudget
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 

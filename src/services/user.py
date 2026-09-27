@@ -8,41 +8,48 @@ from fastapi import HTTPException, Response
 from src.utils.auth import get_password_hash, authenticate_user, create_access_token
 from typing import List
 from src.container.repository import repository_container
+import logging
+import json
 
+
+logger = logging.getLogger(__name__)
 
 class UserService:
 
 
     @staticmethod
     async def create_user(data: UserCreate) -> User:
+        logger.debug(f"Инфа при проверке: {await UserService.is_user_already_exist(data.email)}")
         if await UserService.is_user_already_exist(data.email):
             raise HTTPException(status_code=400, detail="User already exists")
         data.password = get_password_hash(data.password)
-        new_user = repository_container.user_repository().add_one(data)
+        new_user = await repository_container.user_repository().add_one(data.model_dump())
         return new_user
 
     @staticmethod
     async def get_users_list(filters: Filters) -> List[User]:
-        return repository_container.user_repository().get_list(filters=filters)
+        return await repository_container.user_repository().get_list(filters=filters)
 
     @staticmethod
     async def get_user_by_id(id: UUID) -> User:
-        user = repository_container.user_repository().get_one(id=id)
+        logger.debug(id)
+        user = await repository_container.user_repository().get_one(id=id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")  # выкакать исключение, raise - исключение
         return user
 
     @staticmethod
     async def is_user_already_exist(email: EmailStr) -> bool:
-        user = repository_container.user_repository().get_one(email=email)
-        if not user:
+        user = await repository_container.user_repository().get_one(email=email)
+        if user is None:
             return False
         return True
 
     @staticmethod
     async def login(user: UserLogin, response: Response, session: AsyncSession) -> str:
         new_user = await authenticate_user(user.email, user.password, session)
-        jwt_token_data: dict = {"id": new_user.id}
+        logger.info(new_user)
+        jwt_token_data: dict = {"id": json.dumps(new_user.id, default=str)}
         jwt_token = create_access_token(jwt_token_data)
         response.set_cookie("access_token", jwt_token)
         return "успешный вход"

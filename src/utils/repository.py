@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
                                     async_sessionmaker, create_async_engine)
 from sqlalchemy import select
 
-from schema.filter import Filters
 
 
 class AbstractRepository(ABC):
