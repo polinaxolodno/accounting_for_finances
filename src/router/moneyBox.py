@@ -16,6 +16,8 @@ async def create_moneybox(money_box: MoneyBoxCreate, session: AsyncSession = Dep
     return new_moneybox.serialize()
 
 
+
+
 @router.get("/moneybox-list")
 async def get_moneybox_list(filters: Filters, session: AsyncSession = Depends(get_session)) -> list[MoneyBoxOutPutModel]:
     query_result = await MoneyBoxService.get_moneybox_list(filters, session)
