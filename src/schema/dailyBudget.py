@@ -13,5 +13,4 @@ class DailyBudgetOutPutModel(BaseModel):
 class DailyBudgetCreate(BaseModel):
     total_budget: float = Field(description='total_budget')
     date_end: datetime = Field(description='date_end')
-    daily_budget: float = Field(description='daily_budget')
     userid: UUID4 = Field(description='user_id', foreign_key='user.id')

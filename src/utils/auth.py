@@ -65,9 +65,9 @@ def get_user_id_from_token(token: str) -> UUID:
     logger.info(token)
     jwt_payload: dict = get_token_if_valid(token)
     user_id = jwt_payload.get("id")
-    logger.info("Пиписька " + user_id)
     if not user_id:
-        raise HTTPException(403, "Here is no email in jwt_token")
+        raise HTTPException(403, "Here is no id in jwt_token")
+    logger.info(f'юзер id из токена {user_id}')
     return user_id
 
 def get_current_user_id(token: str = Depends(get_token)) -> UUID:

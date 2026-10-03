@@ -7,7 +7,6 @@ class MoneyBoxRepository(SQLAlchemyRepository):
     model = MoneyBox
 
 
-    @staticmethod
     async def get_list(self, filters: MoneyBoxFilter) -> list[MoneyBox]:
         async with self.async_session_maker() as session:
             query = select(self.model)
@@ -28,4 +27,4 @@ class MoneyBoxRepository(SQLAlchemyRepository):
             )
         query_result = await session.execute(query)
         query_result = [row[0] for row in query_result.all()]
-    return query_result
+        return query_result

@@ -13,7 +13,6 @@ class UserCreate(BaseModel):
     username: str = Field(description='name')
     email: str = Field(description='email')
     password: str = Field(description='password')
-    date_joined: datetime = Field(description='date_joined')
 
 
 class UserLogin(BaseModel):

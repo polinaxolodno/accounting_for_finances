@@ -7,7 +7,6 @@ class UserRepository(SQLAlchemyRepository):
     model = User
 
 
-    @staticmethod
     async def get_list(self, filters: UserFilters) -> list[User]:
         async with self.async_session_maker() as session:
             query = select(self.model)
