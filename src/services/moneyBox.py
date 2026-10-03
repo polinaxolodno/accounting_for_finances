@@ -1,7 +1,7 @@
 from src.schema.moneyBox import MoneyBoxCreate, MoneyBoxOutPutModel
 from src.db.session import AsyncSession
 from src.models.moneyBox import MoneyBox
-from src.schema.filter import Filters
+from src.schema.filter import MoneyBoxFilter
 from sqlalchemy import or_, desc, Any, UUID, select
 from fastapi import HTTPException
 from typing import List
@@ -17,5 +17,5 @@ class MoneyBoxService:
         return new_moneybox
 
     @staticmethod
-    async def get_moneybox_list(filters: Filters) -> List[MoneyBox]:
-        return repository_container.moneybox_repository().get_list(filters=filters)
+    async def get_moneybox_list(filters: MoneyBoxFilter) -> List[MoneyBox]:
+        return await repository_container.moneybox_repository().get_list(filters=filters)

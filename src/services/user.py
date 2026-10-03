@@ -1,7 +1,7 @@
-from src.schema.user import UserCreate, UserOutPutModel, UserLogin
+from src.schema.user import UserCreate, UserLogin
 from src.db.session import AsyncSession
 from src.models.user import User
-from src.schema.filter import Filters
+from src.schema.filter import UserFilter
 from sqlalchemy import or_, desc, Any, UUID, select
 from pydantic import UUID4, EmailStr
 from fastapi import HTTPException, Response
@@ -9,7 +9,6 @@ from src.utils.auth import get_password_hash, authenticate_user, create_access_t
 from typing import List
 from src.container.repository import repository_container
 import logging
-import json
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +26,7 @@ class UserService:
         return new_user
 
     @staticmethod
-    async def get_users_list(filters: Filters) -> List[User]:
+    async def get_users_list(filters: UserFilter) -> List[User]:
         return await repository_container.user_repository().get_list(filters=filters)
 
     @staticmethod
@@ -49,7 +48,7 @@ class UserService:
     async def login(user: UserLogin, response: Response, session: AsyncSession) -> str:
         new_user = await authenticate_user(user.email, user.password, session)
         logger.info(new_user)
-        jwt_token_data: dict = {"id": json.dumps(new_user.id, default=str)}
+        jwt_token_data: dict = {"id": str(new_user.id)}
         jwt_token = create_access_token(jwt_token_data)
         response.set_cookie("access_token", jwt_token)
         return "успешный вход"
