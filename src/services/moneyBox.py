@@ -1,5 +1,4 @@
-from src.schema.moneyBox import MoneyBoxCreate, MoneyBoxOutPutModel
-from src.db.session import AsyncSession
+from src.schema.moneyBox import MoneyBoxCreate
 from src.models.moneyBox import MoneyBox
 from src.schema.filter import MoneyBoxFilter
 from sqlalchemy import or_, desc, Any, UUID, select

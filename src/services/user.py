@@ -1,5 +1,4 @@
 from src.schema.user import UserCreate, UserLogin
-from src.db.session import AsyncSession
 from src.models.user import User
 from src.schema.filter import UserFilter
 from sqlalchemy import or_, desc, Any, UUID, select
