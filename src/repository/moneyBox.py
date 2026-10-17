@@ -1,5 +1,6 @@
 from src.models.moneyBox import MoneyBox
 from src.utils.repository import SQLAlchemyRepository
+from src.schema.filter import MoneyBoxFilter
 
 
 class MoneyBoxRepository(SQLAlchemyRepository):

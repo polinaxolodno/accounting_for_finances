@@ -1,5 +1,6 @@
 from src.models.user import User
 from src.utils.repository import SQLAlchemyRepository
+from src.schema.filter import UserFilter
 
 
 class UserRepository(SQLAlchemyRepository):
@@ -7,7 +8,7 @@ class UserRepository(SQLAlchemyRepository):
     model = User
 
 
-    async def get_list(self, filters: UserFilters) -> list[User]:
+    async def get_list(self, filters: UserFilter) -> list[User]:
         async with self.async_session_maker() as session:
             query = select(self.model)
             if filters.limit is not None and filters.limit >= 0:
