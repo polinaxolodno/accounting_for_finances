@@ -25,3 +25,8 @@ migration-upgrade: requirements
 .PHONY: run_uvicorn
 run_uvicorn: requirements migration-upgrade
 	poetry run uvicorn src.main:app --reload
+
+
+.PHONY: run_test
+run_test:requirements
+	poetry run pytest

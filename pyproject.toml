@@ -32,7 +32,9 @@ test = [
     "flake8 (>=7.3.0,<8.0.0)",
     "flake8-pyproject (>=1.2.4,<2.0.0)",
     "pep8-naming (>=0.15.1,<0.16.0)",
-    "pytest (>=9.1.1,<10.0.0)"
+    "pytest (>=9.1.1,<10.0.0)",
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "pytest-xdist (>=3.8.0,<4.0.0)"
 ]
 
 [tool.flake8]
@@ -54,3 +56,28 @@ per-file-ignores = [
 #    "migrations/env.py:F401",
 #    "migrations/versions/*:W291",
 ]
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+pythonpath = ["."]
+testpaths = ["tests"]
+#env_files = [".test.env"]
+#env_override_existing_values = 1
+addopts = [
+    "--strict",
+    "--cov=src",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=90",
+]
+filterwarnings = [
+    # Field(foreign_key=...) в схемах — известное предупреждение pydantic, к тестам отношения не имеет
+    "ignore:Using extra keyword arguments on Field is deprecated:DeprecationWarning",
+    # starlette советует httpx2 для TestClient; в уроках используем httpx
+    "ignore:Using httpx with starlette.testclient is deprecated",
+]
+
+[tool.coverage.run]
+omit = ["src/router/file.py"]  # роутер не подключён в приложение, тестировать нечего
